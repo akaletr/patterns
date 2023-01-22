@@ -9,22 +9,27 @@ import (
 
 // First ограничивает вызов функции callback, вызывает первую из серии в интервале duration
 func First(duration time.Duration, callback functions.Function) functions.Function {
-	var lastCall time.Time
+	var (
+		lastCall time.Time
+		result   interface{}
+		err      error
+	)
+
 	mu := sync.RWMutex{}
 
-	_ = lastCall
 	return func(options ...interface{}) (interface{}, error) {
 		mu.Lock()
-		lastCall = time.Now()
-		mu.Unlock()
+		defer func() {
+			lastCall = time.Now()
+			mu.Unlock()
+		}()
 
-		res, err := callback()
-
-		if err != nil {
-
+		if time.Now().Before(lastCall.Add(duration)) {
+			return result, nil
 		}
 
-		return res, err
+		result, err = callback()
+		return result, err
 	}
 }
 
