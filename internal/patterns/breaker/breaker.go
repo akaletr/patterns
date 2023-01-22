@@ -9,12 +9,12 @@ import (
 )
 
 // Breaker при количестве ошибок больше errorCount подряд размыкает цепь на duration секунд
-func Breaker(errorCount int, duration time.Duration, f functions.Function) functions.Function {
+func Breaker(errorCount int, duration time.Duration, callback functions.Function) functions.Function {
 	mu := sync.RWMutex{}
 	count := 0
 	lastBreakTime := time.Now()
 
-	return func() (interface{}, error) {
+	return func(options ...interface{}) (interface{}, error) {
 		mu.RLock()
 		if count >= errorCount {
 			if time.Since(lastBreakTime) < duration {
@@ -24,7 +24,7 @@ func Breaker(errorCount int, duration time.Duration, f functions.Function) funct
 		}
 		mu.RUnlock()
 
-		res, err := f()
+		res, err := callback()
 		if err != nil {
 			mu.Lock()
 			count++

@@ -1,15 +1,15 @@
 package main
 
 import (
-	"cmd/main/main.go/internal/functions"
+	"cmd/main/main.go/internal/patterns/debounce"
 	"fmt"
 	"time"
 
-	"cmd/main/main.go/internal/patterns/breaker"
+	"cmd/main/main.go/internal/functions"
 )
 
 func main() {
-	f := breaker.Breaker(3, time.Millisecond*200, functions.NewSimpleFunc(time.Millisecond*100, 50))
+	f := debounce.First(time.Millisecond*200, functions.NewSimpleFunc(time.Millisecond*100, 50))
 
 	for i := 0; i < 1000; i++ {
 		fmt.Println(f())

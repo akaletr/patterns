@@ -6,10 +6,10 @@ import (
 	"time"
 )
 
-type Function func() (interface{}, error)
+type Function func(...interface{}) (interface{}, error)
 
 func NewSimpleFunc(timeout time.Duration, errorPercent int) Function {
-	return func() (interface{}, error) {
+	return func(...interface{}) (interface{}, error) {
 		time.Sleep(timeout)
 		result := rand.Intn(100)
 
