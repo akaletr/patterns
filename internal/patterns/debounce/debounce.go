@@ -35,8 +35,7 @@ func First(duration time.Duration, callback functions.Function) functions.Functi
 
 // Last ограничивает вызов функции callback, вызывает последнюю из серии после интервала duration
 func Last(duration time.Duration, callback functions.Function) functions.Function {
-
 	return func(...interface{}) (interface{}, error) {
-		return callback()
+		return nil, nil
 	}
 }
