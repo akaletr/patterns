@@ -7,7 +7,7 @@ import (
 	"cmd/main/main.go/internal/functions"
 )
 
-func Retry(ctx context.Context, callback functions.FunctionWithContext, retryCount int, delay time.Duration) functions.FunctionWithContext {
+func Retry(callback functions.FunctionWithContext, retryCount int, delay time.Duration) functions.FunctionWithContext {
 	return func(ctx context.Context, options ...interface{}) (interface{}, error) {
 		for r := 0; ; r++ {
 			result, err := callback(ctx)
